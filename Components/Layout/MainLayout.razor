@@ -1,0 +1,38 @@
+﻿@inherits LayoutComponentBase
+
+@* Imports for mud blazor *@
+<MudThemeProvider />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+@* This is the main layout   *@
+<MudLayout>
+    <MudDrawer Open="true" ClipMode="DrawerClipMode.Never" Variant="DrawerVariant.Mini" Elevation="1">
+        <MudNavMenu>
+            <NavMenu />
+        </MudNavMenu>
+    </MudDrawer>
+
+    <MudMainContent>
+        <MudAppBar Elevation="1" Color="Color.Primary">
+            <MudText Typo="Typo.h6">My Blazor App</MudText>
+            <MudSpacer />
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" Href="https://learn.microsoft.com/aspnet/core/"
+                Target="_blank">
+                About
+            </MudButton>
+        </MudAppBar>
+
+        <MudContainer MaxWidth="MaxWidth.False" Class="mt-4">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>
