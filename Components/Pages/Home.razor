@@ -1,9 +1,11 @@
 ﻿@page "/"
+
 @rendermode InteractiveServer
+@inject HeaderService HeaderService
 
 <PageTitle>Home</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.False" Class="mt-4 text-black">
+<MudContainer MaxWidth="MaxWidth.False" Class="mt-4 text-black pa-2">
     <MudExpansionPanels>
 
         <MudExpansionPanel Text="Intro">
@@ -57,11 +59,17 @@
                 The Weather page demonstrates fetching data asynchronously from an API and displaying it in a table
                 using MudBlazor components.
             </MudText>
+            <MudText Typo="Typo.h6" GutterBottom="true">Auth Page:</MudText>
+            <MudText Typo="Typo.body1">
+                The Auth page is for logging in
+            </MudText>
         </MudExpansionPanel>
-
-        <MudPaper Class="mt-6 p-3">
-            <MudText Typo="Typo.body1">This is a context example.</MudText>
-        </MudPaper>
-
     </MudExpansionPanels>
 </MudContainer>
+
+@code {
+    protected override void OnInitialized()
+    {
+        HeaderService.Heading = "Home";
+    }
+}

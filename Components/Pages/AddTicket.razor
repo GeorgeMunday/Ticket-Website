@@ -1,0 +1,12 @@
+@page "/addticket"
+@inject HeaderService HeaderService
+
+<MudGrid></MudGrid>
+
+
+@code {
+    protected override void OnInitialized()
+    {
+        HeaderService.Heading = "Add Ticket";
+    }
+}

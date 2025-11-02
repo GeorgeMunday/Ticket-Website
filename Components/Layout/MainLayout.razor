@@ -1,12 +1,13 @@
-﻿@inherits LayoutComponentBase
+﻿@using tutorial.Services
+@inherits LayoutComponentBase
+@inject HeaderService HeaderService
+@implements IDisposable
 
-@* Imports for MudBlazor *@
 <MudThemeProvider />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-@* Main layout *@
 <MudLayout>
     <MudDrawer Open="true" ClipMode="DrawerClipMode.Never" Variant="DrawerVariant.Mini" Elevation="1">
         <MudNavMenu>
@@ -15,14 +16,12 @@
     </MudDrawer>
 
     <MudMainContent>
-        @* Header *@
         <MudAppBar Elevation="0" Color="Color.Transparent">
-            <MudText>Page context</MudText>
+            <MudText Typo="Typo.h6">@HeaderService.Heading</MudText>
             <MudSpacer />
             <NavLink Href="https://learn.microsoft.com/aspnet/core/" Target="_blank">docs</NavLink>
         </MudAppBar>
 
-        @* Main body *@
         <MudContainer MaxWidth="MaxWidth.False">
             @Body
         </MudContainer>
@@ -34,3 +33,18 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code {
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            HeaderService.OnChange += StateHasChanged;
+        }
+    }
+
+    public void Dispose()
+    {
+        HeaderService.OnChange -= StateHasChanged;
+    }
+}
