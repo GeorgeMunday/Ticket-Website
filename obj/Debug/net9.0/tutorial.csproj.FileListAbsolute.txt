@@ -28,12 +28,14 @@ C:\Users\geoge\tutorial\tutorial\obj\Debug\net9.0\tutorial.AssemblyInfoInputs.ca
 C:\Users\geoge\tutorial\tutorial\obj\Debug\net9.0\tutorial.AssemblyInfo.cs
 C:\Users\geoge\tutorial\tutorial\obj\Debug\net9.0\tutorial.csproj.CoreCompileInputs.cache
 C:\Users\geoge\tutorial\tutorial\obj\Debug\net9.0\tutorial.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\geoge\tutorial\tutorial\obj\Debug\net9.0\tutorial.sourcelink.json
 C:\Users\geoge\tutorial\tutorial\obj\Debug\net9.0\rjimswa.dswa.cache.json
 C:\Users\geoge\tutorial\tutorial\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
 C:\Users\geoge\tutorial\tutorial\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
 C:\Users\geoge\tutorial\tutorial\obj\Debug\net9.0\scopedcss\bundle\tutorial.styles.css
 C:\Users\geoge\tutorial\tutorial\obj\Debug\net9.0\compressed\tzxjg6is5z-jk5eo7zo4m.gz
 C:\Users\geoge\tutorial\tutorial\obj\Debug\net9.0\compressed\0wz98yz2xy-tjzqk7tnel.gz
+C:\Users\geoge\tutorial\tutorial\obj\Debug\net9.0\compressed\ni1qxaa5ji-5rd7hg7qb7.gz
 C:\Users\geoge\tutorial\tutorial\obj\Debug\net9.0\compressed\j8t5bl7z3a-bqjiyaj88i.gz
 C:\Users\geoge\tutorial\tutorial\obj\Debug\net9.0\compressed\nywkha4l4v-c2jlpeoesf.gz
 C:\Users\geoge\tutorial\tutorial\obj\Debug\net9.0\compressed\9xf1rc6i56-erw9l3u2r3.gz
@@ -88,4 +90,3 @@ C:\Users\geoge\tutorial\tutorial\obj\Debug\net9.0\refint\tutorial.dll
 C:\Users\geoge\tutorial\tutorial\obj\Debug\net9.0\tutorial.pdb
 C:\Users\geoge\tutorial\tutorial\obj\Debug\net9.0\tutorial.genruntimeconfig.cache
 C:\Users\geoge\tutorial\tutorial\obj\Debug\net9.0\ref\tutorial.dll
-C:\Users\geoge\tutorial\tutorial\obj\Debug\net9.0\compressed\ni1qxaa5ji-mur7o69vmn.gz

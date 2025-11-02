@@ -1,7 +1,67 @@
 ﻿@page "/"
+@rendermode InteractiveServer
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<MudContainer MaxWidth="MaxWidth.False" Class="mt-4 text-black">
+    <MudExpansionPanels>
 
-Welcome to your new app.
+        <MudExpansionPanel Text="Intro">
+            <MudText Class="mb-4">
+                This is my first time using MudBlazor, and I will be using it as a playground of sorts.
+                Alongside, I will also be learning SQLite.
+                This page will serve as documentation for what I learn.
+                I will also include important commands here.
+                If you find any of this useful, feel free to star the repository on GitHub and create a pull request if
+                you
+                see anything that could be improved.
+            </MudText>
+        </MudExpansionPanel>
+
+        <MudExpansionPanel Text="Documentation Links">
+            <MudText Typo="Typo.h6" GutterBottom="true">MudBlazor:</MudText>
+            <MudLink Href="https://www.mudblazor.com/components/link#api" Target="_blank">
+                MudBlazor Components API
+            </MudLink>
+            <MudText Typo="Typo.h6" Class="mt-3" GutterBottom="true">SQLite:</MudText>
+            <MudLink Href="https://www.sqlite.org/docs.html" Target="_blank">
+                SQLite Documentation
+            </MudLink>
+            <MudText Typo="Typo.h6" Class="mt-3" GutterBottom="true">Blazor:</MudText>
+            <MudLink Href="https://learn.microsoft.com/en-us/aspnet/core/blazor/?view=aspnetcore-9.0" Target="_blank">
+                Microsoft docs
+            </MudLink>
+        </MudExpansionPanel>
+
+        <MudExpansionPanel Text="Important Commands">
+            <MudText Typo="Typo.body1" GutterBottom="true">
+                <b>dotnet run</b>
+            </MudText>
+            <MudText Typo="Typo.body1" GutterBottom="true">
+                <b>dotnet watch run</b>
+            </MudText>
+        </MudExpansionPanel>
+
+        <MudExpansionPanel Text="What I Learned">
+            <MudText Typo="Typo.h6" GutterBottom="true">Home Page:</MudText>
+            <MudText Typo="Typo.body1" GutterBottom="true">
+                Implemented expansion panels and header logic so it changes based on what page you are on.
+            </MudText>
+            <MudText Typo="Typo.h6" GutterBottom="true">Counter Page:</MudText>
+            <MudText Typo="Typo.body1" GutterBottom="true">
+                The Counter page demonstrates data binding and event handling. Clicking the button increments a counter
+                in real-time.
+            </MudText>
+            <MudText Typo="Typo.h6" GutterBottom="true">Weather Page:</MudText>
+            <MudText Typo="Typo.body1">
+                The Weather page demonstrates fetching data asynchronously from an API and displaying it in a table
+                using MudBlazor components.
+            </MudText>
+        </MudExpansionPanel>
+
+        <MudPaper Class="mt-6 p-3">
+            <MudText Typo="Typo.body1">This is a context example.</MudText>
+        </MudPaper>
+
+    </MudExpansionPanels>
+</MudContainer>

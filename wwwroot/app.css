@@ -69,3 +69,7 @@ h1:focus {
 .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+.text-black {
+  color: black;
+}
