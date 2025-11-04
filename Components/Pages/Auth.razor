@@ -1,4 +1,7 @@
 @page "/auth"
+@using Microsoft.Data.Sqlite
+@using System.Threading.Tasks
+
 @inject HeaderService HeaderService
 @rendermode InteractiveServer
 
@@ -23,7 +26,7 @@
                         @bind-Value="confirmPassword" Required="false" />
 
                     <div class="d-flex justify-end mt-4">
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AuthService">
                             Register
                         </MudButton>
                     </div>
@@ -37,7 +40,7 @@
                         Required="false" />
 
                     <div class="d-flex justify-end mt-4">
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AuthService">
                             Login
                         </MudButton>
                     </div>
@@ -48,26 +51,36 @@
 </MudGrid>
 
 <MudPaper Class="mt-4 pa-4 d-flex gap-1">
-    <MudText>Error:</MudText>
-    <MudText>Error No</MudText>
+    <MudText>Sqlite DB connection:</MudText>
+    @if (dbState)
+    {
+        <MudText Class="green-text">Connected</MudText>
+    }
+    else
+    {
+        <MudText Class="red-text">Not Connected</MudText>
+    }
+
 </MudPaper>
 
-<MudPaper Class="mt-4 pa-4 d-flex gap-1">
-    <MudText>Sqlite DB connection:</MudText>
-    <MudText>Not Connected</MudText>
-</MudPaper>
+<MudPaper Class="mt-4 pa-4 d-flex gap-1"></MudPaper>
 
 @code {
     bool formState = true;
+    public static bool dbState = false;
 
     string username = "";
     string email = "";
     string password = "";
     string confirmPassword = "";
 
+    Random rng = new Random();
+
+
     protected override void OnInitialized()
     {
         HeaderService.Heading = "Auth";
+        TestConnection();
     }
 
     void ToggleForm()
@@ -75,9 +88,104 @@
         formState = !formState;
     }
 
-    private void GetConnection()
+    private static SqliteConnection TestConnection()
     {
-        string connection = "";
+        try
+        {
+            string connectionString = @"Data Source=c:\Users\geoge\OneDrive\Desktop\dbs\tutorial.db";
+            using var connection = new SqliteConnection(connectionString);
+            connection.Open();
+            dbState = true;
+            return connection;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error" + ex);
+            dbState = false;
+        }
 
+        return null;
+    }
+
+    private async Task AuthService()
+    {
+        if (formState)
+        {
+            await SignUpService();
+        }
+        else
+        {
+            await SignInService();
+        }
+    }
+
+    private async Task SignInService()
+    {
+        try
+        {
+            if (dbState == false)
+            {
+                return;
+            }
+
+            string connectionString = @"Data Source=c:\Users\geoge\OneDrive\Desktop\dbs\tutorial.db";
+            SqliteConnection connection = new SqliteConnection(connectionString);
+            connection.Open();
+            using SqliteCommand cmd = connection.CreateCommand();
+            cmd.CommandText = "SELECT COUNT(1) FROM Users Where Email=@email AND Password=@password";
+            cmd.Parameters.AddWithValue("@email", email);
+            cmd.Parameters.AddWithValue("@password", password);
+            var result = await cmd.ExecuteScalarAsync();
+            int count = Convert.ToInt32(result);
+
+            if (count == 1)
+            {
+                Console.WriteLine("logged in");
+            }
+            else
+            {
+                Console.WriteLine("Invalid email or password");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+
+    }
+
+    private async Task SignUpService()
+    {
+        try
+        {
+
+
+            if (password != confirmPassword)
+            {
+                return;
+            }
+
+            if (dbState == false)
+            {
+                return;
+            }
+
+            int rand1 = rng.Next(10000, 100000);
+            string connectionString = @"Data Source=c:\Users\geoge\OneDrive\Desktop\dbs\tutorial.db";
+            SqliteConnection connection = new SqliteConnection(connectionString);
+            connection.Open();
+            using SqliteCommand cmd = connection.CreateCommand();
+            cmd.CommandText = "INSERT INTO Users (Id, Username, Email, Password) VAlUES (@id,@username,@email,@password)";
+            cmd.Parameters.AddWithValue("@id", rand1);
+            cmd.Parameters.AddWithValue("@username", username);
+            cmd.Parameters.AddWithValue("@email", email);
+            cmd.Parameters.AddWithValue("@password", password);
+            await cmd.ExecuteNonQueryAsync();
+            Console.WriteLine("signed up");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
     }
 }
