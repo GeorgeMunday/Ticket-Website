@@ -1,4 +1,41 @@
 @page "/deleteticket"
+@rendermode InteractiveServer
+@inject HeaderService HeaderService
+@inject AuthService AuthService
+@inject NavigationManager NavManager
 
 <PageTitle>Delete Ticket</PageTitle>
-<MudText>hello</MudText>
+
+@if (authState)
+{
+    <div></div>
+}
+else
+{
+    <MudPaper Class="pa-4">
+        <MudText Typo="Typo.h5">You are not logged in</MudText>
+        <MudText>Please wait… navigating</MudText>
+        <MudProgressLinear Indeterminate="true" Class="mt-2" />
+    </MudPaper>
+}
+
+@code {
+    bool authState;
+    bool redirectStarted = false;
+
+    protected override void OnInitialized()
+    {
+        HeaderService.Heading = "Delete Ticket";
+        authState = AuthService.AuthState;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !authState && !redirectStarted)
+        {
+            redirectStarted = true;
+            await Task.Delay(1000);
+            NavManager.NavigateTo("/auth");
+        }
+    }
+}

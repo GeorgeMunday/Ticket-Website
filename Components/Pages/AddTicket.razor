@@ -1,13 +1,41 @@
 @page "/addticket"
-@inject HeaderService HeaderService
 @rendermode InteractiveServer
-@using MudBlazor
+@inject HeaderService HeaderService
+@inject AuthService AuthService
+@inject NavigationManager NavManager
 
-<h1>hello</h1>
+<PageTitle>Add Ticket</PageTitle>
+
+@if (authState)
+{
+    <div></div>
+}
+else
+{
+    <MudPaper Class="pa-4">
+        <MudText Typo="Typo.h5">You are not logged in</MudText>
+        <MudText>Please wait… navigating</MudText>
+        <MudProgressLinear Indeterminate="true" Class="mt-2" />
+    </MudPaper>
+}
 
 @code {
+    bool authState;
+    bool redirectStarted = false;
+
     protected override void OnInitialized()
     {
         HeaderService.Heading = "Add Ticket";
+        authState = AuthService.AuthState;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !authState && !redirectStarted)
+        {
+            redirectStarted = true;
+            await Task.Delay(1000);
+            NavManager.NavigateTo("/auth");
+        }
     }
 }

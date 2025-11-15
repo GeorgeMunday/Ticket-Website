@@ -1,11 +1,14 @@
 @page "/auth"
+@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.Data.Sqlite
 @using System.Threading.Tasks
 
 @inject HeaderService HeaderService
+@inject AuthService AuthService
 @rendermode InteractiveServer
 
 
+<!--this is the title at the top of the page in the tab of page -->
 <PageTitle>Auth</PageTitle>
 
 <MudGrid>
@@ -26,7 +29,7 @@
                         @bind-Value="confirmPassword" Required="false" />
 
                     <div class="d-flex justify-end mt-4">
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AuthService">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AuthHelp">
                             Register
                         </MudButton>
                     </div>
@@ -40,7 +43,7 @@
                         Required="false" />
 
                     <div class="d-flex justify-end mt-4">
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AuthService">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AuthHelp">
                             Login
                         </MudButton>
                     </div>
@@ -63,16 +66,39 @@
 
 </MudPaper>
 
-<MudPaper Class="mt-4 pa-4 d-flex gap-1"></MudPaper>
+<MudPaper Class="mt-4 pa-4 d-flex gap-1">
+    <MudText>state:</MudText>
+    @if (displayAuthState)
+    {
+        <MudText Class="green-text">Signd in</MudText>
+        <MudText>as @displayUserState</MudText>
+    }
+    else
+    {
+        <MudText Class="red-text">Signed out</MudText>
+    }
+</MudPaper>
+@if (displayAuthState)
+{
+    <MudPaper Class="mt-4 pa-4 d-flex gap-1">
+        <MudButton OnClick=" LogoutAuthState">Logout</MudButton>
+    </MudPaper>
+}
+
+
+
 
 @code {
-    bool formState = true;
+    bool formState = false;
+    bool displayAuthState = true;
+    string displayUserState = "";
     public static bool dbState = false;
-
     string username = "";
     string email = "";
     string password = "";
     string confirmPassword = "";
+
+
 
     Random rng = new Random();
 
@@ -80,6 +106,7 @@
     protected override void OnInitialized()
     {
         HeaderService.Heading = "Auth";
+        ReadAuthState();
         TestConnection();
     }
 
@@ -107,7 +134,7 @@
         return null;
     }
 
-    private async Task AuthService()
+    private async Task AuthHelp()
     {
         if (formState)
         {
@@ -141,6 +168,11 @@
             if (count == 1)
             {
                 Console.WriteLine("logged in");
+                AuthService.AuthState = true;
+                AuthService.UserState = email;
+                email = "";
+                password = "";
+                ReadAuthState();
             }
             else
             {
@@ -181,11 +213,28 @@
             cmd.Parameters.AddWithValue("@email", email);
             cmd.Parameters.AddWithValue("@password", password);
             await cmd.ExecuteNonQueryAsync();
+            email = "";
+            password = "";
+            username = "";
+            confirmPassword = "";
             Console.WriteLine("signed up");
+
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex);
         }
+    }
+
+    private void ReadAuthState()
+    {
+        displayAuthState = AuthService.AuthState;
+        displayUserState = AuthService.UserState;
+    }
+
+    private void LogoutAuthState()
+    {
+        AuthService.AuthState = false;
+        ReadAuthState();
     }
 }

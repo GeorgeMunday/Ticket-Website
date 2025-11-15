@@ -10,6 +10,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddMudServices();
 builder.Services.AddScoped<HeaderService>();
+builder.Services.AddScoped<AuthService>();
 
 var app = builder.Build();
 
@@ -31,3 +32,5 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
+
+
