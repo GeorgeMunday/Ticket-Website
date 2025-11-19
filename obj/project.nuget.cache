@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "eZelntWHniw=",
+  "dgSpecHash": "V4XkOpjY3z8=",
   "success": true,
-  "projectFilePath": "C:\\Users\\geoge\\tutorial\\tutorial.csproj",
+  "projectFilePath": "C:\\Users\\geoge\\tutorial-1\\tutorial.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\geoge\\.nuget\\packages\\microsoft.aspnetcore.authorization\\9.0.1\\microsoft.aspnetcore.authorization.9.0.1.nupkg.sha512",
     "C:\\Users\\geoge\\.nuget\\packages\\microsoft.aspnetcore.components\\9.0.1\\microsoft.aspnetcore.components.9.0.1.nupkg.sha512",

@@ -8,7 +8,16 @@
 
 @if (authState)
 {
-    <div></div>
+    <MudPaper Class="p-4" Elevation="4">
+        <MudForm>
+            <MudTextField T="string" Label="Ticket Name" Required="false" />
+            <MudTextField T="string" Label="Description" Required="false" />
+            <MudNumericField Label="Priority" Variant="Variant.Text" Min="0" Max="5" />
+            <MudNumericField Label="Estimated Time (Hr)" Variant="Variant.Text" Min="0" Max="100" />
+            <MudNumericField T="int" Label="Ticket ID" Disabled="true" Variant="Variant.Outlined" HideSpinButtons="true" />
+            <MudButton>Submit</MudButton>
+        </MudForm>
+    </MudPaper>
 }
 else
 {

@@ -972,11 +972,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\geoge\\tutorial\\tutorial.csproj",
+      "projectUniqueName": "C:\\Users\\geoge\\tutorial-1\\tutorial.csproj",
       "projectName": "tutorial",
-      "projectPath": "C:\\Users\\geoge\\tutorial\\tutorial.csproj",
+      "projectPath": "C:\\Users\\geoge\\tutorial-1\\tutorial.csproj",
       "packagesPath": "C:\\Users\\geoge\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\geoge\\tutorial\\obj\\",
+      "outputPath": "C:\\Users\\geoge\\tutorial-1\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
