@@ -1,30 +1,53 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.Data.Sqlite
+@using System.Threading.Tasks
 
 @rendermode InteractiveServer
-@inject HeaderService HeaderService
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Auth</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.False" Class="mt-4 text-black pa-2">
-    <MudExpansionPanels>
+<MudGrid>
+    <MudItem xs="12">
+        <MudPaper Class="pa-4">
+            <div class="d-flex justify-end mb-4">
+                <MudButton OnClick="ToggleForm">Switch</MudButton>
+            </div>
 
-        <MudExpansionPanel Text="Intro">
-            <MudText Class="mb-4">
-                This is my first time using MudBlazor, and I will be using it as a playground of sorts.
-                Alongside, I will also be learning SQLite.
-                This page will serve as documentation for what I learn.
-                I will also include important commands here.
-                If you find any of this useful, feel free to star the repository on GitHub and create a pull request if
-                you
-                see anything that could be improved.
-            </MudText>
-        </MudExpansionPanel>
-    </MudExpansionPanels>
-</MudContainer>
+            @if (formState)
+            {
+                <MudForm>
+                    <MudTextField T="string" Label="Username" @bind-Value="username" Required="false" />
+                    <MudTextField T="string" Label="Email" @bind-Value="email" Required="false" />
+                    <MudTextField T="string" Label="Password" InputType="InputType.Password" @bind-Value="password"
+                        Required="false" />
+                    <MudTextField T="string" Label="Confirm Password" InputType="InputType.Password"
+                        @bind-Value="confirmPassword" Required="false" />
 
-@code {
-    protected override void OnInitialized()
-    {
-        HeaderService.Heading = "Home";
-    }
-}
+                    <div class="d-flex justify-end mt-4">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AuthHelp">
+                            Register
+                        </MudButton>
+                    </div>
+                </MudForm>
+            }
+            else
+            {
+                <MudForm>
+                    <MudTextField T="string" Label="Email" @bind-Value="email" Required="false" />
+                    <MudTextField T="string" Label="Password" InputType="InputType.Password" @bind-Value="password"
+                        Required="false" />
+
+                    <div class="d-flex justify-end mt-4">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AuthHelp">
+                            Login
+                        </MudButton>
+                    </div>
+                </MudForm>
+            }
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+
+

@@ -20,7 +20,6 @@
         <MudAppBar Elevation="0" Color="Color.Transparent">
             <MudText Typo="Typo.h6">@HeaderService.Heading</MudText>
             <MudSpacer />
-            <NavLink Href="https://learn.microsoft.com/aspnet/core/" Target="_blank">docs</NavLink>
         </MudAppBar>
 
         <MudContainer MaxWidth="MaxWidth.False">
@@ -41,11 +40,18 @@
         if (firstRender)
         {
             HeaderService.OnChange += StateHasChanged;
+            AuthService.OnChange += StateHasChanged;
         }
     }
 
     public void Dispose()
     {
         HeaderService.OnChange -= StateHasChanged;
+        AuthService.OnChange -= StateHasChanged;
+    }
+
+    private void SignOut()
+    {
+        AuthService.AuthState = false;
     }
 }

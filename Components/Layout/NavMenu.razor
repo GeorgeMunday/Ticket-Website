@@ -1,26 +1,59 @@
-﻿<MudDrawer Open="true" ClipMode="DrawerClipMode.Never" Variant="DrawerVariant.Mini" Elevation="1">
-    <MudDrawerHeader>
-        <MudText Typo="Typo.h6">Tutorial App</MudText>
-    </MudDrawerHeader>
+﻿@rendermode InteractiveServer
+@inject AuthService AuthService
+@inject NavigationManager NavManager
 
-    <MudNavMenu>
-        <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">
-            Home
-        </MudNavLink>
-        <MudNavLink Href="auth" Icon="@Icons.Material.Filled.ManageAccounts">
-            Auth
-        </MudNavLink>
-        <MudNavLink Href="addticket" Icon="@Icons.Material.Filled.Add">
-            Add Ticket
-        </MudNavLink>
-        <MudNavLink Href="modifyticket" Icon="@Icons.Material.Filled.DeleteOutline">
-            Delete Ticket
-        </MudNavLink>
-        <MudNavLink Href="ticketboard" Icon="@Icons.Material.Filled.Analytics">
-            Ticket board
-        </MudNavLink>
-        <MudNavLink Href="dashboard" Icon="@Icons.Material.Filled.Dashboard">
-            Dashboard
-        </MudNavLink>
-    </MudNavMenu>
-</MudDrawer>
+<MudDrawerHeader>
+    <MudText Typo="Typo.h6">Ticket App</MudText>
+</MudDrawerHeader>
+
+<div style="display: flex; flex-direction: column; height: calc(100vh - 64px); justify-content: space-between;">
+    <div>
+        @if (AuthService?.AuthState == true)
+        {
+            <MudNavLink Href="ticketboard" Icon="@Icons.Material.Filled.Analytics">
+                Ticket board
+            </MudNavLink>
+            <MudNavLink Href="addticket" Icon="@Icons.Material.Filled.Add">
+                Add Ticket
+            </MudNavLink>
+            <MudNavLink Href="modifyticket" Icon="@Icons.Material.Filled.DeleteOutline">
+                Delete Ticket
+            </MudNavLink>
+        }
+        else
+        {
+            <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">
+                Home
+            </MudNavLink>
+        }
+    </div>
+    @if (AuthService?.AuthState == true)
+    {
+        <div style="border-top: 1px solid #e0e0e0; padding-top: 10px; margin-bottom: 8px;">
+            <MudButton FullWidth="true" OnClick="SignOut" Variant="Variant.Text" Color="Color.Error">
+                Sign Out
+            </MudButton>
+        </div>
+    }
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        AuthService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        AuthService.OnChange -= StateHasChanged;
+    }
+
+    private void SignOut()
+    {
+        if (AuthService != null)
+        {
+            AuthService.AuthState = false;
+            NavManager.NavigateTo("/");
+        }
+    }
+}
