@@ -11,6 +11,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddMudServices();
 builder.Services.AddScoped<HeaderService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<RoomService>();
 
 var app = builder.Build();
 

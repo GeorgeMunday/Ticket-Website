@@ -15,7 +15,7 @@ namespace tutorial.Components.Pages
 
         protected override void OnInitialized()
         {
-            HeaderService.Heading = "Delete Ticket";
+            HeaderService.Heading = "Modify Ticket";
             authState = AuthService.AuthState;
         }
 

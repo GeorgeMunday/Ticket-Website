@@ -10,7 +10,6 @@ namespace tutorial.Components.Pages
     public partial class Home : ComponentBase
     {
         bool formState = false;
-        // Removed unused fields displayAuthState and displayUserState
         public static bool dbState = false;
         string username = "";
         string email = "";
@@ -144,7 +143,6 @@ namespace tutorial.Components.Pages
                 Console.WriteLine(ex);
             }
         }
-
         private void LogoutAuthState()
         {
             if (AuthService != null)

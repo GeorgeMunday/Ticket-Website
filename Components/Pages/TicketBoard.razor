@@ -6,7 +6,23 @@
 
 @if (authState)
 {
-    <div></div>
+    @if (RoomService?.CurrentRoom == "")
+    {
+        <MudPaper Class="p-4" Elevation="2">
+            <MudForm>
+                <MudTextField T="string" Label="Enter room name" @bind-Value="newRoom" />
+                <div class="d-flex justify-end mt-2">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SetRoom">Set Room</MudButton>
+                </div>
+            </MudForm>
+        </MudPaper>
+    }
+    else
+    {
+        <MudPaper Class="p-4" Elevation="2">
+            <MudText Typo="Typo.h5">Current room: @RoomService?.CurrentRoom</MudText>
+        </MudPaper>
+    }
 }
 else
 {
