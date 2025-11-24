@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using System.Threading.Tasks;
 using tutorial.Services;
-
+using Microsoft.Data.Sqlite;
 namespace tutorial.Components.Pages
 {
     public partial class TicketBoard : ComponentBase
@@ -9,7 +9,9 @@ namespace tutorial.Components.Pages
         protected bool authState;
         protected bool redirectStarted = false;
         protected string newRoom = "";
+        protected string newRoomPassword = "";
 
+        Random rng = new Random();
         [Inject] public HeaderService? HeaderService { get; set; }
         [Inject] public AuthService? AuthService { get; set; }
         [Inject] public NavigationManager? NavManager { get; set; }
@@ -40,12 +42,37 @@ namespace tutorial.Components.Pages
                 RoomService.OnChange -= StateHasChanged;
         }
 
-        private void SetRoom()
+        public void EnterRoom(string roomName, string roomPassword)
         {
-            if (RoomService != null && !string.IsNullOrWhiteSpace(newRoom))
+            
+        }
+
+        private async Task CreateRoom()
+        {
+            try
             {
-                RoomService.SetRoom(newRoom.Trim());
-                newRoom = string.Empty;
+                int roomId = rng.Next(10000, 100000);
+
+                string connectionString = @"Data Source=c:\Users\geoge\OneDrive\Desktop\dbs\tutorial.db";
+                SqliteConnection connection = new SqliteConnection(connectionString);
+                connection.Open();
+
+                using SqliteCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "INSERT INTO Rooms (Id, Code, Password) VALUES (@id, @code, @password)";
+                cmd.Parameters.AddWithValue("@id", roomId);
+                cmd.Parameters.AddWithValue("@code", newRoom);  
+                cmd.Parameters.AddWithValue("@password", newRoomPassword); 
+
+                await cmd.ExecuteNonQueryAsync();
+
+                newRoom = "";
+                newRoomPassword = "";
+
+                Console.WriteLine("Room created");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
             }
         }
     }

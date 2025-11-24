@@ -20,6 +20,7 @@ namespace tutorial.Components.Pages
 
         [Inject] public HeaderService? HeaderService { get; set; }
         [Inject] public AuthService? AuthService { get; set; }
+        [Inject] public NavigationManager? NavManager { get; set; }
 
         protected override void OnInitialized()
         {
@@ -37,7 +38,7 @@ namespace tutorial.Components.Pages
         {
             try
             {
-                string connectionString = @"Data Source=C:\\Users\\geoge\\tutorial.db";
+                string connectionString = @"Data Source=c:\Users\geoge\OneDrive\Desktop\dbs\tutorial.db";
                 using var connection = new SqliteConnection(connectionString);
                 connection.Open();
                 dbState = true;
@@ -68,29 +69,42 @@ namespace tutorial.Components.Pages
         {
             try
             {
-                if (dbState == false)
-                {
+                if (!dbState)
                     return;
-                }
 
-                string connectionString = @"Data Source=C:\\Users\\geoge\\tutorial.db";
-                SqliteConnection connection = new SqliteConnection(connectionString);
+                string connectionString = @"Data Source=c:\Users\geoge\OneDrive\Desktop\dbs\tutorial.db";
+                using var connection = new SqliteConnection(connectionString);
                 connection.Open();
-                using SqliteCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "SELECT COUNT(1) FROM Users Where Email=@email AND Password=@password";
+
+                using var cmd = connection.CreateCommand();
+                cmd.CommandText = @"
+                    SELECT Id, RoomId 
+                    FROM Users 
+                    WHERE Email=@email AND Password=@password 
+                    LIMIT 1";
+
                 cmd.Parameters.AddWithValue("@email", email);
                 cmd.Parameters.AddWithValue("@password", password);
-                var result = await cmd.ExecuteScalarAsync();
-                int count = Convert.ToInt32(result);
 
-                if (count == 1)
+                using var reader = await cmd.ExecuteReaderAsync();
+
+                if (reader.Read())
                 {
-                    Console.WriteLine("logged in");
+                    int userId = reader.GetInt32(0);
+                    int roomId = reader.IsDBNull(1) ? 0 : reader.GetInt32(1);
+
+                    Console.WriteLine($"Logged in. UserId={userId}, RoomId={roomId}");
+
                     if (AuthService != null)
                     {
                         AuthService.AuthState = true;
-                        AuthService.UserState = email;
+                        AuthService.UserState = email;  
+                        AuthService.UserId = userId;      
+                        AuthService.RoomId = roomId;       
                     }
+
+                    NavManager.NavigateTo("/ticketboard");
+
                     email = "";
                     password = "";
                 }
@@ -103,8 +117,8 @@ namespace tutorial.Components.Pages
             {
                 Console.WriteLine(ex);
             }
-
         }
+
 
         private async Task SignUpService()
         {
@@ -121,7 +135,7 @@ namespace tutorial.Components.Pages
                 }
 
                 int rand1 = rng.Next(10000, 100000);
-                string connectionString = @"Data Source=C:\\Users\\geoge\\tutorial.db";
+                string connectionString = @"Data Source=c:\Users\geoge\OneDrive\Desktop\dbs\tutorial.db";
                 SqliteConnection connection = new SqliteConnection(connectionString);
                 connection.Open();
                 using SqliteCommand cmd = connection.CreateCommand();
@@ -136,17 +150,14 @@ namespace tutorial.Components.Pages
                 username = "";
                 confirmPassword = "";
                 Console.WriteLine("signed up");
+                NavManager.NavigateTo("/ticketboard");
+
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
-        }
-        private void LogoutAuthState()
-        {
-            if (AuthService != null)
-                AuthService.AuthState = false;
         }
     }
 }

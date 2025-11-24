@@ -1,26 +1,39 @@
 @page "/ticketboard"
 @rendermode InteractiveServer
 
-
 <PageTitle>Ticket Board</PageTitle>
 
 @if (authState)
 {
-    @if (RoomService?.CurrentRoom == "")
+    @if (AuthService.RoomId == 0)
     {
         <MudPaper Class="p-4" Elevation="2">
             <MudForm>
+
+                <!-- Room Name -->
                 <MudTextField T="string" Label="Enter room name" @bind-Value="newRoom" />
-                <div class="d-flex justify-end mt-2">
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SetRoom">Set Room</MudButton>
+                <MudTextField T="string" Label="Password" InputType="InputType.Password" Class="mt-2"
+                    @bind-Value="newRoomPassword" />
+
+                <div class="d-flex justify-end mt-4" style="gap:10px;">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary">
+                        Enter Room
+                    </MudButton>
+
+                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="CreateRoom">
+                        Create Room
+                    </MudButton>
                 </div>
+
             </MudForm>
         </MudPaper>
     }
     else
     {
         <MudPaper Class="p-4" Elevation="2">
-            <MudText Typo="Typo.h5">Current room: @RoomService?.CurrentRoom</MudText>
+            <MudText Typo="Typo.h5">
+                Current room: @RoomService?.CurrentRoom
+            </MudText>
         </MudPaper>
     }
 }
