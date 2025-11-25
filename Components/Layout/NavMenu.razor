@@ -6,7 +6,8 @@
     <MudText Typo="Typo.h6">Ticket App</MudText>
 </MudDrawerHeader>
 
-<div style="display: flex; flex-direction: column; height: calc(100vh - 64px); justify-content: space-between;">
+
+<div style=" display: flex; flex-direction: column; height: calc(100vh - 64px); justify-content: space-between;">
     <div>
         @if (AuthService?.AuthState == true)
         {
@@ -16,9 +17,9 @@
             <MudNavLink Href="addticket" Icon="@Icons.Material.Filled.AddBox">
                 Add Ticket
             </MudNavLink>
-            <MudNavLink Href="modifyticket" Icon="@Icons.Material.Filled.ChangeCircle">
-                Modify Ticket
-            </MudNavLink>
+            @if (AuthService?.RoomId != 0)
+            {
+            }
         }
         else
         {

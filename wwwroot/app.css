@@ -73,3 +73,10 @@ h1:focus {
 .text-black {
   color: black;
 }
+
+.sticky-logout {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}

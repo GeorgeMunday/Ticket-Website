@@ -7,44 +7,36 @@
 
 <PageTitle>Auth</PageTitle>
 
-<MudGrid>
-    <MudItem xs="12">
-        <MudPaper Class="pa-4">
-            <div class="d-flex justify-end mb-4">
-                <MudButton OnClick="ToggleForm">Switch</MudButton>
-            </div>
+<MudPaper Class="mt-5 p-5">
 
-            @if (formState)
-            {
-                <MudForm>
-                    <MudTextField T="string" Label="Username" @bind-Value="username" Required="false" />
-                    <MudTextField T="string" Label="Email" @bind-Value="email" Required="false" />
-                    <MudTextField T="string" Label="Password" InputType="InputType.Password" @bind-Value="password"
-                        Required="false" />
-                    <MudTextField T="string" Label="Confirm Password" InputType="InputType.Password"
-                        @bind-Value="confirmPassword" Required="false" />
+    <MudText Typo="Typo.h5">
+        @(isSignUp ? "Sign Up" : "Sign In")
+    </MudText>
 
-                    <div class="d-flex justify-end mt-4">
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AuthHelp">
-                            Register
-                        </MudButton>
-                    </div>
-                </MudForm>
-            }
-            else
-            {
-                <MudForm>
-                    <MudTextField T="string" Label="Email" @bind-Value="email" Required="false" />
-                    <MudTextField T="string" Label="Password" InputType="InputType.Password" @bind-Value="password"
-                        Required="false" />
+    <MudForm>
 
-                    <div class="d-flex justify-end mt-4">
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AuthHelp">
-                            Login
-                        </MudButton>
-                    </div>
-                </MudForm>
-            }
-        </MudPaper>
-    </MudItem>
-</MudGrid>
+        @if (isSignUp)
+        {
+            <MudTextField Label="Username" @bind-Value="username" />
+        }
+
+        <MudTextField Label="Email" @bind-Value="email" />
+
+        <MudTextField Label="Password" InputType="InputType.Password" @bind-Value="password" />
+
+        @if (isSignUp)
+        {
+            <MudTextField Label="Confirm Password" InputType="InputType.Password" @bind-Value="confirmPassword" />
+        }
+
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="HandleAuth" Class="mt-3">
+            @(isSignUp ? "Create Account" : "Login")
+        </MudButton>
+
+        <MudButton Variant="Variant.Text" OnClick="ToggleForm" Class="mt-2">
+            @(isSignUp ? "Already have an account?" : "Create new account")
+        </MudButton>
+
+    </MudForm>
+
+</MudPaper>

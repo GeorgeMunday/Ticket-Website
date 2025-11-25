@@ -269,7 +269,6 @@ C:\Users\geoge\tutorial-1\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
 C:\Users\geoge\tutorial-1\obj\Debug\net9.0\scopedcss\bundle\tutorial.styles.css
 C:\Users\geoge\tutorial-1\obj\Debug\net9.0\compressed\tzxjg6is5z-jk5eo7zo4m.gz
 C:\Users\geoge\tutorial-1\obj\Debug\net9.0\compressed\0wz98yz2xy-tjzqk7tnel.gz
-C:\Users\geoge\tutorial-1\obj\Debug\net9.0\compressed\ni1qxaa5ji-5rd7hg7qb7.gz
 C:\Users\geoge\tutorial-1\obj\Debug\net9.0\compressed\j8t5bl7z3a-t1cqhe9u97.gz
 C:\Users\geoge\tutorial-1\obj\Debug\net9.0\compressed\nywkha4l4v-c2jlpeoesf.gz
 C:\Users\geoge\tutorial-1\obj\Debug\net9.0\compressed\9xf1rc6i56-sejl45xvog.gz
@@ -324,3 +323,4 @@ C:\Users\geoge\tutorial-1\obj\Debug\net9.0\refint\tutorial.dll
 C:\Users\geoge\tutorial-1\obj\Debug\net9.0\tutorial.pdb
 C:\Users\geoge\tutorial-1\obj\Debug\net9.0\tutorial.genruntimeconfig.cache
 C:\Users\geoge\tutorial-1\obj\Debug\net9.0\ref\tutorial.dll
+C:\Users\geoge\tutorial-1\obj\Debug\net9.0\compressed\ni1qxaa5ji-dtosw4bxvb.gz
