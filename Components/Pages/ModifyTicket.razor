@@ -57,7 +57,7 @@ else
                         Save
                     </MudButton>
 
-                    <MudButton OnClick="ConfirmDelete" Variant="Variant.Filled" Color="Color.Error">
+                    <MudButton OnClick="DeleteTicket" Variant="Variant.Filled" Color="Color.Error">
                         Delete
                     </MudButton>
                 </div>
@@ -78,8 +78,6 @@ else
     string Description = "";
     int Priority = 0;
     int EstimatedTime = 0;
-
-    // YOUR REAL DB PATH
     string DbPath => @"c:\Users\geoge\OneDrive\Desktop\dbs\tutorial.db";
 
     protected override async Task OnInitializedAsync()
@@ -173,22 +171,6 @@ WHERE Id = @id;
         }
 
         NavManager.NavigateTo("/ticketboard");
-    }
-
-    private async Task ConfirmDelete()
-    {
-        bool? result = await DialogService.ShowMessageBox(
-        "Confirm Delete",
-        (MarkupString)"Are you sure you want to <b>delete</b> this ticket? This cannot be undone.",
-        yesText: "Delete",
-        cancelText: "Cancel",
-        options: new DialogOptions { CloseOnEscapeKey = true }
-        );
-
-        if (result == true)
-        {
-            await DeleteTicket();
-        }
     }
 
     private async Task DeleteTicket()
