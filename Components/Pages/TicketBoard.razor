@@ -20,15 +20,19 @@ else
             <MudPaper Class="p-4" Elevation="2">
                 <MudForm>
 
-                    <MudTextField T="string" Label="Enter room name" />
-                    <MudTextField T="string" Label="Password" InputType="InputType.Password" Class="mt-2" />
+                    <MudTextField T="string" Label="Enter room name" @bind-Value="newRoom" />
+                    <MudTextField T="string"
+                                Label="Password"
+                                InputType="InputType.Password"
+                                Class="mt-2"
+                                @bind-Value="newRoomPassword" />
 
                     <div class="d-flex justify-end mt-4" style="gap:10px;">
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary">
+                        <MudButton Variant="Variant.Filled" OnClick="EnterRoom">
                             Enter Room
                         </MudButton>
 
-                        <MudButton Variant="Variant.Filled" Color="Color.Secondary">
+                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="CreateRoom">
                             Create Room
                         </MudButton>
                     </div>

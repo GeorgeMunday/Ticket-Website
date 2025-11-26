@@ -224,9 +224,11 @@ namespace tutorial.Components.Pages
     }
 
         void TicketClick(int ticketId)
-        {
-            NavManager!.NavigateTo($"/modifyticket/{ticketId}");
-        }
+{
+    NavManager!.NavigateTo($"/modifyticket/{ticketId}");
+    Console.WriteLine($"/modifyticket/{ticketId}");
+}
+
     }
 
 }

@@ -47,16 +47,16 @@ namespace tutorial.Components.Pages
             using var cmd = connection.CreateCommand();
     cmd.CommandText = @"
         INSERT INTO Tickets 
-        (TicketName, Description, Priority, EstimatedTime, RoomId, UserId, CreatedAt)
+        (TicketName, Description, Priority, EstimatedTime, RoomId, UserId, CreatedAt, Id)
         VALUES 
-        (@ticketname, @description, @priority, @estimated, @roomid, @userid, @createdat);
+        (@ticketname, @description, @priority, @estimated, @roomid, @userid, @createdat, @id);
     ";
 
             cmd.Parameters.AddWithValue("@ticketname", TicketName);
             cmd.Parameters.AddWithValue("@description", Description);
             cmd.Parameters.AddWithValue("@priority", Priority);
             cmd.Parameters.AddWithValue("@estimated", EstimatedTime);
-            cmd.Parameters.AddWithValue("@ticketid", TicketId);
+            cmd.Parameters.AddWithValue("@id", TicketId);
             cmd.Parameters.AddWithValue("@roomid", AuthService?.RoomId);
             cmd.Parameters.AddWithValue("@userid", AuthService?.UserId);
             cmd.Parameters.AddWithValue("@createdat", DateTime.UtcNow);

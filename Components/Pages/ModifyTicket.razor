@@ -1,20 +1,223 @@
-@page "/modifyticket{TicketId:int}"
+@page "/modifyticket/{TicketId:int}"
 @rendermode InteractiveServer
 
+@using Microsoft.Data.Sqlite
+@inject NavigationManager NavManager
+@inject AuthService AuthService
+@inject HeaderService HeaderService
+@inject IDialogService DialogService
 
 <PageTitle>Modify Ticket</PageTitle>
 
-@if (authState)
+@if (!authState)
 {
-    <MudPaper class="p-4">
-        <MudText>no ticket selected</MudText>
+    <MudPaper Class="pa-4">
+        <MudText Typo="Typo.h5">You are not logged in</MudText>
+        <MudProgressLinear Indeterminate="true" Class="mt-2" />
+    </MudPaper>
+}
+else if (loading)
+{
+    <MudPaper Class="pa-4">
+        <MudProgressCircular Indeterminate="true" />
+        <MudText class="mt-2">Loading ticket…</MudText>
+    </MudPaper>
+}
+else if (ticketNotFound)
+{
+    <MudPaper Class="pa-4">
+        <MudText Typo="Typo.h5" Color="Color.Error">Ticket not found</MudText>
+        <MudButton Color="Color.Primary" OnClick="@(() => NavManager.NavigateTo("/ticketboard"))" Class="mt-2">
+            Back to Board
+        </MudButton>
     </MudPaper>
 }
 else
 {
     <MudPaper Class="pa-4">
-        <MudText Typo="Typo.h5">You are not logged in</MudText>
-        <MudText>Please wait… navigating</MudText>
-        <MudProgressLinear Indeterminate="true" Class="mt-2" />
+        <MudText Typo="Typo.h5">Modify Ticket @TicketId</MudText>
+        <MudDivider Class="my-2" />
+
+        <MudPaper Class="p-4" Elevation="4">
+            <MudForm>
+
+                <MudTextField @bind-Value="TicketName" T="string" Label="Ticket Name" />
+
+                <MudTextField @bind-Value="Description" T="string" Label="Description" Lines="4" />
+
+                <MudNumericField @bind-Value="Priority" T="int" Label="Priority" Min="0" Max="5" />
+
+                <MudNumericField @bind-Value="EstimatedTime" T="int" Label="Estimated Time (Hr)" Min="0" Max="100" />
+
+                <MudNumericField @bind-Value="TicketId" T="int" Label="Ticket ID" Disabled="true" Variant="Variant.Outlined"
+                    HideSpinButtons="true" />
+
+                <div class="mt-3 d-flex gap-3">
+                    <MudButton OnClick="SubmitTicket" Variant="Variant.Filled" Color="Color.Primary">
+                        Save
+                    </MudButton>
+
+                    <MudButton OnClick="ConfirmDelete" Variant="Variant.Filled" Color="Color.Error">
+                        Delete
+                    </MudButton>
+                </div>
+
+            </MudForm>
+        </MudPaper>
     </MudPaper>
+}
+
+@code {
+    [Parameter] public int TicketId { get; set; }
+
+    bool authState = false;
+    bool loading = true;
+    bool ticketNotFound = false;
+
+    string TicketName = "";
+    string Description = "";
+    int Priority = 0;
+    int EstimatedTime = 0;
+
+    // YOUR REAL DB PATH
+    string DbPath => @"c:\Users\geoge\OneDrive\Desktop\dbs\tutorial.db";
+
+    protected override async Task OnInitializedAsync()
+    {
+        HeaderService.Heading = "Modify Ticket";
+        authState = AuthService?.AuthState ?? false;
+
+        if (!authState)
+        {
+            _ = RedirectToHome();
+            return;
+        }
+
+        if (TicketId <= 0)
+        {
+            ticketNotFound = true;
+            loading = false;
+            return;
+        }
+
+        await LoadTicket();
+    }
+
+    private async Task LoadTicket()
+    {
+        try
+        {
+            using var conn = new SqliteConnection($"Data Source={DbPath}");
+            await conn.OpenAsync();
+
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = @"
+SELECT Id, TicketName, Description, Priority, EstimatedTime
+FROM Tickets
+WHERE Id = @tid;
+";
+
+            cmd.Parameters.AddWithValue("@tid", TicketId);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            if (!await reader.ReadAsync())
+            {
+                ticketNotFound = true;
+                loading = false;
+                return;
+            }
+
+            TicketName = reader.IsDBNull(1) ? "" : reader.GetString(1);
+            Description = reader.IsDBNull(2) ? "" : reader.GetString(2);
+            Priority = reader.IsDBNull(3) ? 0 : reader.GetInt32(3);
+            EstimatedTime = reader.IsDBNull(4) ? 0 : reader.GetInt32(4);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"DB ERROR loading ticket: {ex.Message}");
+            ticketNotFound = true;
+        }
+
+        loading = false;
+    }
+
+    private async Task SubmitTicket()
+    {
+        try
+        {
+            using var conn = new SqliteConnection($"Data Source={DbPath}");
+            await conn.OpenAsync();
+
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = @"
+UPDATE Tickets
+SET TicketName = @name,
+Description = @desc,
+Priority = @priority,
+EstimatedTime = @time
+WHERE Id = @id;
+";
+
+            cmd.Parameters.AddWithValue("@name", TicketName);
+            cmd.Parameters.AddWithValue("@desc", Description);
+            cmd.Parameters.AddWithValue("@priority", Priority);
+            cmd.Parameters.AddWithValue("@time", EstimatedTime);
+            cmd.Parameters.AddWithValue("@id", TicketId);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"DB ERROR updating ticket: {ex.Message}");
+        }
+
+        NavManager.NavigateTo("/ticketboard");
+    }
+
+    private async Task ConfirmDelete()
+    {
+        bool? result = await DialogService.ShowMessageBox(
+        "Confirm Delete",
+        (MarkupString)"Are you sure you want to <b>delete</b> this ticket? This cannot be undone.",
+        yesText: "Delete",
+        cancelText: "Cancel",
+        options: new DialogOptions { CloseOnEscapeKey = true }
+        );
+
+        if (result == true)
+        {
+            await DeleteTicket();
+        }
+    }
+
+    private async Task DeleteTicket()
+    {
+        try
+        {
+            using var conn = new SqliteConnection($"Data Source={DbPath}");
+            await conn.OpenAsync();
+
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = @"
+DELETE FROM Tickets
+WHERE Id = @id;
+";
+            cmd.Parameters.AddWithValue("@id", TicketId);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"DB ERROR deleting ticket: {ex.Message}");
+        }
+
+        NavManager.NavigateTo("/ticketboard");
+    }
+
+    private async Task RedirectToHome()
+    {
+        await Task.Delay(1000);
+        NavManager.NavigateTo("/");
+    }
 }
