@@ -5,7 +5,7 @@ using Microsoft.Data.Sqlite;
 
 namespace tutorial.Components.Pages
 {
-    public partial class TicketBoard : ComponentBase, IDisposable
+    public partial class TicketBoard : ComponentBase
     {
         protected bool authState;
         protected bool redirectStarted = false;
@@ -17,7 +17,6 @@ namespace tutorial.Components.Pages
         [Inject] public HeaderService? HeaderService { get; set; }
         [Inject] public AuthService? AuthService { get; set; }
         [Inject] public NavigationManager? NavManager { get; set; }
-        [Inject] public RoomService? RoomService { get; set; }
 
 
 
@@ -30,8 +29,6 @@ namespace tutorial.Components.Pages
                 HeaderService.Heading = "Ticket Board";
 
             authState = AuthService?.AuthState ?? false;
-
-            RoomService!.OnChange += StateHasChanged;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -48,11 +45,6 @@ namespace tutorial.Components.Pages
                 await CheckExistingRoomAssignment();
                 await FetchRoomTickets();
             }
-        }
-
-        public void Dispose()
-        {
-            RoomService!.OnChange -= StateHasChanged;
         }
 
         private async Task CheckExistingRoomAssignment()

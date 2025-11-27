@@ -34,37 +34,32 @@ else if (ticketNotFound)
 }
 else
 {
-    <MudPaper Class="pa-4">
-        <MudText Typo="Typo.h5">Modify Ticket @TicketId</MudText>
-        <MudDivider Class="my-2" />
+    <MudText Typo="Typo.h5" Class="mt-3">Modify Ticket @TicketId</MudText>
+    <MudDivider Class="my-2" />
+    <MudForm>
 
-        <MudPaper Class="p-4" Elevation="4">
-            <MudForm>
+        <MudTextField @bind-Value="TicketName" T="string" Label="Ticket Name" />
 
-                <MudTextField @bind-Value="TicketName" T="string" Label="Ticket Name" />
+        <MudTextField @bind-Value="Description" T="string" Label="Description" Lines="4" />
 
-                <MudTextField @bind-Value="Description" T="string" Label="Description" Lines="4" />
+        <MudNumericField @bind-Value="Priority" T="int" Label="Priority" Min="0" Max="5" />
 
-                <MudNumericField @bind-Value="Priority" T="int" Label="Priority" Min="0" Max="5" />
+        <MudNumericField @bind-Value="EstimatedTime" T="int" Label="Estimated Time (Hr)" Min="0" Max="100" />
 
-                <MudNumericField @bind-Value="EstimatedTime" T="int" Label="Estimated Time (Hr)" Min="0" Max="100" />
+        <MudNumericField @bind-Value="TicketId" T="int" Label="Ticket ID" Disabled="true" Variant="Variant.Outlined"
+            HideSpinButtons="true" />
 
-                <MudNumericField @bind-Value="TicketId" T="int" Label="Ticket ID" Disabled="true" Variant="Variant.Outlined"
-                    HideSpinButtons="true" />
+        <div class="mt-3 d-flex gap-3">
+            <MudButton OnClick="SubmitTicket" Variant="Variant.Filled" Color="Color.Primary">
+                Save
+            </MudButton>
 
-                <div class="mt-3 d-flex gap-3">
-                    <MudButton OnClick="SubmitTicket" Variant="Variant.Filled" Color="Color.Primary">
-                        Save
-                    </MudButton>
+            <MudButton OnClick="DeleteTicket" Variant="Variant.Filled" Color="Color.Error">
+                Delete
+            </MudButton>
+        </div>
 
-                    <MudButton OnClick="DeleteTicket" Variant="Variant.Filled" Color="Color.Error">
-                        Delete
-                    </MudButton>
-                </div>
-
-            </MudForm>
-        </MudPaper>
-    </MudPaper>
+    </MudForm>
 }
 
 @code {

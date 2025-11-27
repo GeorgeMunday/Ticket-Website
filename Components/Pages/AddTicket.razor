@@ -13,31 +13,29 @@
     }
     else
     {
-        <MudPaper Class="p-4" Elevation="4">
-            <MudForm>
-                <!-- Ticket Name -->
-                <MudTextField @bind-Value="TicketName" T="string" Label="Ticket Name" Required="false" />
+        <MudForm>
+            <!-- Ticket Name -->
+            <MudTextField @bind-Value="TicketName" T="string" Label="Ticket Name" Required="false" />
 
-                <!-- Description -->
-                <MudTextField @bind-Value="Description" T="string" Label="Description" Required="false" />
+            <!-- Description -->
+            <MudTextField @bind-Value="Description" T="string" Label="Description" Required="false" />
 
-                <!-- Priority -->
-                <MudNumericField @bind-Value="Priority" T="int" Label="Priority" Variant="Variant.Text" Min="0" Max="5" />
+            <!-- Priority -->
+            <MudNumericField @bind-Value="Priority" T="int" Label="Priority" Variant="Variant.Text" Min="0" Max="5" />
 
-                <!-- Estimated Time -->
-                <MudNumericField @bind-Value="EstimatedTime" T="int" Label="Estimated Time (Hr)" Variant="Variant.Text" Min="0"
-                    Max="100" />
+            <!-- Estimated Time -->
+            <MudNumericField @bind-Value="EstimatedTime" T="int" Label="Estimated Time (Hr)" Variant="Variant.Text" Min="0"
+                Max="100" />
 
-                <!-- Generated Ticket ID -->
-                <MudNumericField @bind-Value="TicketId" T="string" Label="Ticket ID" Disabled="true" Variant="Variant.Outlined"
-                    HideSpinButtons="true" />
+            <!-- Generated Ticket ID -->
+            <MudNumericField @bind-Value="TicketId" T="string" Label="Ticket ID" Disabled="true" Variant="Variant.Outlined"
+                HideSpinButtons="true" />
 
-                <!-- Submit Button -->
-                <MudButton OnClick="SubmitTicket" Variant="Variant.Filled" Color="Color.Primary">
-                    Submit
-                </MudButton>
-            </MudForm>
-        </MudPaper>
+            <!-- Submit Button -->
+            <MudButton OnClick="SubmitTicket" Variant="Variant.Filled" Color="Color.Primary">
+                Submit
+            </MudButton>
+        </MudForm>
     }
 }
 else
