@@ -11,6 +11,8 @@ builder.Services.AddRazorComponents()
 builder.Services.AddMudServices();
 builder.Services.AddScoped<HeaderService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<DbService>(sp =>
+    new DbService(@"Data Source=c:\Users\geoge\OneDrive\Desktop\dbs\tutorial.db"));
 
 var app = builder.Build();
 
