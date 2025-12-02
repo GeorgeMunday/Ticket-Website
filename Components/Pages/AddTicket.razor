@@ -5,7 +5,7 @@
 
 @if (authState)
 {
-    @if (AuthService.RoomId == 0)
+    @if (AuthService!.RoomId == 0)
     {
         <MudPaper>
             <MudText class="p-4">no room selected</MudText>

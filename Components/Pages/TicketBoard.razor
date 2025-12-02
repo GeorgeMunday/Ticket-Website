@@ -15,7 +15,7 @@ else
     <!-- Sticky header with logout -->
 
     <div class="mt-12"> 
-        @if (AuthService.RoomId == 0)
+        @if (AuthService!.RoomId == 0)
         {
             <MudPaper Class="p-4" Elevation="2">
                 <MudForm>

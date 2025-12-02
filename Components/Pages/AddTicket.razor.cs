@@ -19,11 +19,11 @@ namespace tutorial.Components.Pages
         [Inject] public HeaderService? HeaderService { get; set; }
         [Inject] public AuthService? AuthService { get; set; }
         [Inject] public NavigationManager? NavManager { get; set; }
-
+        [Inject] public DbService? DbService { get; set; }
         protected override void OnInitialized()
         {
-            HeaderService.Heading = "Add Ticket";
-            authState = AuthService.AuthState;
+            HeaderService!.Heading = "Add Ticket";            
+            authState = AuthService!.AuthState;
             TicketId = new Random().Next(100000, 999999).ToString();
         }
 
@@ -39,29 +39,21 @@ namespace tutorial.Components.Pages
 
         public async Task SubmitTicket()
         {
-            string connectionString = @"Data Source=c:\Users\geoge\OneDrive\Desktop\dbs\tutorial.db";
 
-            using var connection = new SqliteConnection(connectionString);
-            await connection.OpenAsync();
+        var success = await DbService!.SubmitTicket(
+            TicketName,
+            Description,
+            Priority,
+            EstimatedTime,
+            TicketId,
+            AuthService?.RoomId,
+            AuthService?.UserId
+        );
 
-            using var cmd = connection.CreateCommand();
-    cmd.CommandText = @"
-        INSERT INTO Tickets 
-        (TicketName, Description, Priority, EstimatedTime, RoomId, UserId, CreatedAt, Id)
-        VALUES 
-        (@ticketname, @description, @priority, @estimated, @roomid, @userid, @createdat, @id);
-    ";
-
-            cmd.Parameters.AddWithValue("@ticketname", TicketName);
-            cmd.Parameters.AddWithValue("@description", Description);
-            cmd.Parameters.AddWithValue("@priority", Priority);
-            cmd.Parameters.AddWithValue("@estimated", EstimatedTime);
-            cmd.Parameters.AddWithValue("@id", TicketId);
-            cmd.Parameters.AddWithValue("@roomid", AuthService?.RoomId);
-            cmd.Parameters.AddWithValue("@userid", AuthService?.UserId);
-            cmd.Parameters.AddWithValue("@createdat", DateTime.UtcNow);
-            await cmd.ExecuteNonQueryAsync();
+        if (success)
+        {
             NavManager?.NavigateTo("/ticketboard");
+        }
         }
     }
 }
