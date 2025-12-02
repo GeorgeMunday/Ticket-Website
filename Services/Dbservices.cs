@@ -14,10 +14,6 @@ namespace tutorial.Services
         {
             _connectionString = connectionString;
         }
-
-        // -----------------------------
-        //  INTERNAL TICKET MODEL HERE
-        // -----------------------------
         public class Ticket
         {
             public int Id { get; set; }
@@ -237,30 +233,118 @@ namespace tutorial.Services
         }
 
         public async Task<int> CreateRoomAsync(int userId, string roomCode, string password)
-{
-    int roomId = _rng.Next(10000, 100000);
+        {
+            int roomId = _rng.Next(10000, 100000);
 
-    using var connection = new SqliteConnection(_connectionString);
-    await connection.OpenAsync();
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
 
-    using var cmd = connection.CreateCommand();
-    cmd.CommandText = @"
-        INSERT INTO Rooms (Id, Code, Password)
-        VALUES (@id, @code, @password)";
-    cmd.Parameters.AddWithValue("@id", roomId);
-    cmd.Parameters.AddWithValue("@code", roomCode);
-    cmd.Parameters.AddWithValue("@password", password);
+            using var cmd = connection.CreateCommand();
+            cmd.CommandText = @"
+                INSERT INTO Rooms (Id, Code, Password)
+                VALUES (@id, @code, @password)";
+            cmd.Parameters.AddWithValue("@id", roomId);
+            cmd.Parameters.AddWithValue("@code", roomCode);
+            cmd.Parameters.AddWithValue("@password", password);
 
-    await cmd.ExecuteNonQueryAsync();
+            await cmd.ExecuteNonQueryAsync();
 
-    using var updateCmd = connection.CreateCommand();
-    updateCmd.CommandText = "UPDATE Users SET RoomId = @rid WHERE Id = @uid";
-    updateCmd.Parameters.AddWithValue("@rid", roomId);
-    updateCmd.Parameters.AddWithValue("@uid", userId);
-    await updateCmd.ExecuteNonQueryAsync();
+            using var updateCmd = connection.CreateCommand();
+            updateCmd.CommandText = "UPDATE Users SET RoomId = @rid WHERE Id = @uid";
+            updateCmd.Parameters.AddWithValue("@rid", roomId);
+            updateCmd.Parameters.AddWithValue("@uid", userId);
+            await updateCmd.ExecuteNonQueryAsync();
 
-    return roomId;
-}
+            return roomId;
+        }
+        
+        public async Task<Ticket?> GetTicketAsync(int ticketId)
+        {
+            try
+            {
+                using var connection = new SqliteConnection(_connectionString);
+                await connection.OpenAsync();
 
+                using var cmd = connection.CreateCommand();
+                cmd.CommandText = @"
+                    SELECT Id, TicketName, Description, Priority, EstimatedTime, RoomId, UserId, CreatedAt
+                    FROM Tickets
+                    WHERE Id = @id";
+                cmd.Parameters.AddWithValue("@id", ticketId);
+
+                using var reader = await cmd.ExecuteReaderAsync();
+                if (!await reader.ReadAsync())
+                    return null;
+
+                return new Ticket
+                {
+                    Id = reader.GetInt32(0),
+                    TicketName = reader.IsDBNull(1) ? "" : reader.GetString(1),
+                    Description = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                    Priority = reader.IsDBNull(3) ? 0 : reader.GetInt32(3),
+                    EstimatedTime = reader.IsDBNull(4) ? 0 : reader.GetInt32(4),
+                    RoomId = reader.IsDBNull(5) ? 0 : reader.GetInt32(5),
+                    UserId = reader.IsDBNull(6) ? 0 : reader.GetInt32(6),
+                    CreatedAt = reader.IsDBNull(7) ? DateTime.MinValue : reader.GetDateTime(7)
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"DB ERROR loading ticket: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<bool> UpdateTicketAsync(Ticket ticket)
+        {
+            try
+            {
+                using var connection = new SqliteConnection(_connectionString);
+                await connection.OpenAsync();
+
+                using var cmd = connection.CreateCommand();
+                cmd.CommandText = @"
+                    UPDATE Tickets
+                    SET TicketName = @name,
+                        Description = @desc,
+                        Priority = @priority,
+                        EstimatedTime = @time
+                    WHERE Id = @id";
+                cmd.Parameters.AddWithValue("@name", ticket.TicketName);
+                cmd.Parameters.AddWithValue("@desc", ticket.Description);
+                cmd.Parameters.AddWithValue("@priority", ticket.Priority);
+                cmd.Parameters.AddWithValue("@time", ticket.EstimatedTime);
+                cmd.Parameters.AddWithValue("@id", ticket.Id);
+
+                await cmd.ExecuteNonQueryAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"DB ERROR updating ticket: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteTicketAsync(int ticketId)
+        {
+            try
+            {
+                using var connection = new SqliteConnection(_connectionString);
+                await connection.OpenAsync();
+
+                using var cmd = connection.CreateCommand();
+                cmd.CommandText = @"DELETE FROM Tickets WHERE Id = @id";
+                cmd.Parameters.AddWithValue("@id", ticketId);
+
+                await cmd.ExecuteNonQueryAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"DB ERROR deleting ticket: {ex.Message}");
+                return false;
+            }
+        }
     }
 }

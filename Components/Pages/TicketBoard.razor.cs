@@ -64,6 +64,7 @@ namespace tutorial.Components.Pages
             {
                 AuthService.RoomId = roomId;
                 Console.WriteLine("Room entered successfully.");
+                await FetchRoomTickets();
             }
             else
             {

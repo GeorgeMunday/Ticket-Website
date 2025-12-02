@@ -7,6 +7,8 @@
 @inject HeaderService HeaderService
 @inject IDialogService DialogService
 
+@inject DbService DbService
+
 <PageTitle>Modify Ticket</PageTitle>
 
 @if (!authState)
@@ -98,99 +100,41 @@ else
 
     private async Task LoadTicket()
     {
-        try
+        var t = await DbService.GetTicketAsync(TicketId);
+        if (t == null)
         {
-            using var conn = new SqliteConnection($"Data Source={DbPath}");
-            await conn.OpenAsync();
-
-            using var cmd = conn.CreateCommand();
-            cmd.CommandText = @"
-SELECT Id, TicketName, Description, Priority, EstimatedTime
-FROM Tickets
-WHERE Id = @tid;
-";
-
-            cmd.Parameters.AddWithValue("@tid", TicketId);
-
-            using var reader = await cmd.ExecuteReaderAsync();
-
-            if (!await reader.ReadAsync())
-            {
-                ticketNotFound = true;
-                loading = false;
-                return;
-            }
-
-            TicketName = reader.IsDBNull(1) ? "" : reader.GetString(1);
-            Description = reader.IsDBNull(2) ? "" : reader.GetString(2);
-            Priority = reader.IsDBNull(3) ? 0 : reader.GetInt32(3);
-            EstimatedTime = reader.IsDBNull(4) ? 0 : reader.GetInt32(4);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"DB ERROR loading ticket: {ex.Message}");
             ticketNotFound = true;
         }
-
+        else
+        {
+            TicketName = t.TicketName;
+            Description = t.Description;
+            Priority = t.Priority;
+            EstimatedTime = t.EstimatedTime;
+        }
         loading = false;
     }
 
     private async Task SubmitTicket()
     {
-        try
+        var t = new DbService.Ticket
         {
-            using var conn = new SqliteConnection($"Data Source={DbPath}");
-            await conn.OpenAsync();
-
-            using var cmd = conn.CreateCommand();
-            cmd.CommandText = @"
-UPDATE Tickets
-SET TicketName = @name,
-Description = @desc,
-Priority = @priority,
-EstimatedTime = @time
-WHERE Id = @id;
-";
-
-            cmd.Parameters.AddWithValue("@name", TicketName);
-            cmd.Parameters.AddWithValue("@desc", Description);
-            cmd.Parameters.AddWithValue("@priority", Priority);
-            cmd.Parameters.AddWithValue("@time", EstimatedTime);
-            cmd.Parameters.AddWithValue("@id", TicketId);
-
-            await cmd.ExecuteNonQueryAsync();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"DB ERROR updating ticket: {ex.Message}");
-        }
-
+            Id = TicketId,
+            TicketName = TicketName,
+            Description = Description,
+            Priority = Priority,
+            EstimatedTime = EstimatedTime
+        };
+        await DbService.UpdateTicketAsync(t);
         NavManager.NavigateTo("/ticketboard");
     }
 
     private async Task DeleteTicket()
     {
-        try
-        {
-            using var conn = new SqliteConnection($"Data Source={DbPath}");
-            await conn.OpenAsync();
-
-            using var cmd = conn.CreateCommand();
-            cmd.CommandText = @"
-DELETE FROM Tickets
-WHERE Id = @id;
-";
-            cmd.Parameters.AddWithValue("@id", TicketId);
-
-            await cmd.ExecuteNonQueryAsync();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"DB ERROR deleting ticket: {ex.Message}");
-        }
-
+        await DbService.DeleteTicketAsync(TicketId);
         NavManager.NavigateTo("/ticketboard");
     }
+
 
     private async Task RedirectToHome()
     {
